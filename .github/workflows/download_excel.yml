@@ -1,0 +1,26 @@
+name: Download Excel from OneDrive
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour (you can change this schedule)
+  workflow_dispatch:  # Allows manual triggering of the workflow
+
+jobs:
+  download-and-update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Download Excel File from OneDrive
+        run: |
+          curl -L "https://baps365-my.sharepoint.com/:x:/g/personal/pp1234007_na_baps_id/Ee8L6UEBIz5Grjodyxn8iWsB03hGimD5NTB_m1iiuwhywA?e=iysguj" -o data.xlsx
+
+      - name: Commit and Push Updated Excel File
+        run: |
+          git config --global user.email "oneppranav@gmail.com"
+          git config --global user.name "pranav"
+          git add data.xlsx
+          git commit -m "Update Excel file from OneDrive"
+          git push
