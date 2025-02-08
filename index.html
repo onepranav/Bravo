@@ -112,26 +112,29 @@
             }
         }
 
-        function showSlide(cardIndex, slideIndex, slides) {
-            const slide = slides[slideIndex % slides.length];
-            const imgElement = document.getElementById(`image-${cardIndex}`);
+        function showSlides(slideIndex, slides) {
+            for (let i = 0; i < 4; i++) {
+                const currentSlide = slides[(slideIndex + i) % slides.length];
+                const imgElement = document.getElementById(`image-${i + 1}`);
+                const descriptionElement = document.getElementById(`description-${i + 1}`);
 
-            // Set the image and description
-            imgElement.src = slide.photo;
-            document.getElementById(`description-${cardIndex}`).textContent = slide.description;
+                // Set the image and description for each card
+                imgElement.src = currentSlide.photo;
+                descriptionElement.textContent = currentSlide.description;
+            }
         }
 
         function startCarousel(slides) {
-            let currentIndexes = [0, 1, 2, 3];  // Initial slide index for each card
+            let currentSlideIndex = 0;  // Start with the first set of slides
 
-            // Show the initial slides
-            currentIndexes.forEach((index, card) => showSlide(card + 1, index, slides));
+            // Show the initial set of 4 slides
+            showSlides(currentSlideIndex, slides);
 
-            // Rotate each card independently every 5 seconds
+            // Update all 4 slides simultaneously every 5 seconds
             setInterval(() => {
-                currentIndexes = currentIndexes.map(index => index + 1);
-                currentIndexes.forEach((index, card) => showSlide(card + 1, index, slides));
-            }, 5000);  // Change slide every 5 seconds
+                currentSlideIndex += 4;  // Move to the next 4 slides
+                showSlides(currentSlideIndex, slides);
+            }, 5000);
         }
 
         window.onload = fetchSlides;
