@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Satsang: The Journey To Rajipo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #341F3C;
+            color: white;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        #header {
+            padding: 20px;
+            background-color: #4B2A57;
+        }
+        #logo {
+            width: 250px;
+            height: auto;
+        }
+        #grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-gap: 15px;
+            padding: 20px;
+            max-width: 90%;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: #4B2A57;
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .card img {
+            width: 100%;
+            max-height: 250px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+        .description {
+            font-size: 20px;
+            font-weight: bold;
+            padding: 10px 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="header">
+        <img id="logo" src="adhiveshan logo.svg" alt="Logo">
+    </div>
+
+    <div id="grid-container">
+        <div class="card" id="card-1">
+            <img id="image-1" src="" alt="Image 1" onerror="this.onerror=null;this.src='Satsang The Journey To Rajipo.png';">
+            <div class="description" id="description-1">Loading...</div>
+        </div>
+        <div class="card" id="card-2">
+            <img id="image-2" src="" alt="Image 2" onerror="this.onerror=null;this.src='Satsang The Journey To Rajipo.png';">
+            <div class="description" id="description-2">Loading...</div>
+        </div>
+        <div class="card" id="card-3">
+            <img id="image-3" src="" alt="Image 3" onerror="this.onerror=null;this.src='Satsang The Journey To Rajipo.png';">
+            <div class="description" id="description-3">Loading...</div>
+        </div>
+        <div class="card" id="card-4">
+            <img id="image-4" src="" alt="Image 4" onerror="this.onerror=null;this.src='Satsang The Journey To Rajipo.png';">
+            <div class="description" id="description-4">Loading...</div>
+        </div>
+    </div>
+
+    <script>
+        async function fetchSlides() {
+            try {
+                const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQCuvfgPMIvFnYI--nGuWs5m1cquU3z9mBAVap2fgPEjODf7NipunBzXfRa0vgnFssTKLw3N3th8UET/pub?output=csv';
+                const response = await fetch(url);
+                const text = await response.text();
+
+                const rows = text.split('\n').slice(1).map(row => {
+                    const columns = row.split(',');
+
+                    // Convert the Google Drive link to use the lh3.googleusercontent.com endpoint
+                    let photoUrl = columns[3].replace(/"/g, '').trim();
+                    if (!photoUrl || photoUrl === '') {
+                        // If no photo URL is provided, use the default image
+                        photoUrl = 'Satsang The Journey To Rajipo.png';
+                    } else if (photoUrl.includes('open?id=')) {
+                        const fileId = photoUrl.split('open?id=')[1];
+                        photoUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
+                    } else if (photoUrl.includes('/file/d/')) {
+                        const fileId = photoUrl.match(/\/d\/(.*?)\//)[1];
+                        photoUrl = `https://lh3.googleusercontent.com/d/${fileId}`;
+                    }
+
+                    return {
+                        description: `${columns[1].replace(/"/g, '').trim()} - ${columns[2].replace(/"/g, '').trim()} Completed`,
+                        photo: photoUrl
+                    };
+                });
+
+                console.log('Parsed Rows with Image URLs:', rows);  // Verify the data
+
+                startCarousel(rows);
+            } catch (error) {
+                console.error('Error fetching Google Sheets data:', error);
+            }
+        }
+
+        function showSlide(cardIndex, slideIndex, slides) {
+            const slide = slides[slideIndex % slides.length];
+            const imgElement = document.getElementById(`image-${cardIndex}`);
+
+            // Set the image and description
+            imgElement.src = slide.photo;
+            document.getElementById(`description-${cardIndex}`).textContent = slide.description;
+        }
+
+        function startCarousel(slides) {
+            let currentIndexes = [0, 1, 2, 3];  // Initial slide index for each card
+
+            // Show the initial slides
+            currentIndexes.forEach((index, card) => showSlide(card + 1, index, slides));
+
+            // Rotate each card independently every 5 seconds
+            setInterval(() => {
+                currentIndexes = currentIndexes.map(index => index + 1);
+                currentIndexes.forEach((index, card) => showSlide(card + 1, index, slides));
+            }, 5000);  // Change slide every 5 seconds
+        }
+
+        window.onload = fetchSlides;
+    </script>
+
+</body>
+</html>
