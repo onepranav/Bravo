@@ -12,10 +12,14 @@
             text-align: center;
             margin: 0;
             padding: 0;
+            height: 100vh; /* Take full viewport height */
+            display: flex;
+            flex-direction: column;
         }
         #header {
-            padding: 10px;
+            padding: 10px 0;
             background-color: #4B2A57;
+            flex: 0 0 auto; /* Header should not grow */
         }
         #logo {
             width: 200px;
@@ -25,28 +29,32 @@
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-gap: 15px;
-            padding: 20px;
+            padding: 10px;
+            flex: 1 1 auto; /* Grid takes up remaining space */
+            overflow: hidden;
+            height: calc(100vh - 70px); /* Dynamically adjust grid height based on header size */
             max-width: 90%;
             margin: 0 auto;
         }
         .card {
             background-color: #4B2A57;
             color: white;
-            padding: 10px;
+            padding: 5px;
             border-radius: 10px;
             box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.3);
             text-align: center;
         }
         .card img {
             width: 100%;
-            max-height: 250px;
-            object-fit: cover;
+            height: 100%;
+            max-height: 35vh; /* Restrict the height relative to the viewport */
+            object-fit: contain; /* Prevent excessive cropping */
             border-radius: 10px;
         }
         .description {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
-            padding: 10px 0;
+            padding: 5px 0;
         }
     </style>
 </head>
